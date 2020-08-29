@@ -1,9 +1,10 @@
 import itertools
 import pdb
+from typing import Any
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+import torch.nn.functional as fn
 
 
 def mlp(input_size, output_size, hidden_sizes, activation, output_activation):
@@ -17,6 +18,9 @@ def mlp(input_size, output_size, hidden_sizes, activation, output_activation):
 
 
 class AsyncGraphConv(nn.Module):
+    def _forward_unimplemented(self, *input: Any) -> None:
+        pass
+
     def __init__(self, input_size, output_size, mlp_arch):
         super().__init__()
 
