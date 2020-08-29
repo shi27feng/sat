@@ -3,11 +3,11 @@ channels:
   - pytorch
   - conda-forge
 dependencies:
-  - python=3.6
+  - python=3.8
   - numpy
   - scipy
   - matplotlib
-  - pytorch=1.0.0
+  - pytorch=1.6.1
   - torchvision
   - pyyaml
   - networkx
