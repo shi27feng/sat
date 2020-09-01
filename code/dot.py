@@ -1,12 +1,9 @@
-import pdb
-from cnf import CNF
-from util import DataSample, adj, adj_batch, init_edge_attr, to_sparse_tensor
-import scipy.sparse as sparse
-import matplotlib.pyplot as plt
-import networkx as nx
-from graphviz import Graph
 import sys
 
+from graphviz import Graph
+
+from cnf import CNF
+from util import adj
 
 f = CNF.from_file(sys.argv[1])
 a_pos, a_neg = adj(f)

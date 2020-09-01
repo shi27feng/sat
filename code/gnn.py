@@ -1,10 +1,9 @@
 import itertools
-import pdb
+from abc import ABC
 from typing import Any
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as fn
 
 
 def mlp(input_size, output_size, hidden_sizes, activation, output_activation):
@@ -17,10 +16,7 @@ def mlp(input_size, output_size, hidden_sizes, activation, output_activation):
     return nn.Sequential(*itertools.chain(*layers))
 
 
-class AsyncGraphConv(nn.Module):
-    def _forward_unimplemented(self, *input: Any) -> None:
-        pass
-
+class AsyncGraphConv(nn.Module, ABC):
     def __init__(self, input_size, output_size, mlp_arch):
         super().__init__()
 
@@ -58,7 +54,7 @@ class AsyncGraphConv(nn.Module):
         return hv, hc
 
 
-class GraphConv(nn.Module):
+class GraphConv(nn.Module, ABC):
     def __init__(self, input_size, output_size, mlp_arch):
         super().__init__()
 
@@ -100,7 +96,7 @@ class GraphConv(nn.Module):
         return h
 
 
-class GraphReadout(nn.Module):
+class GraphReadout(nn.Module, ABC):
     def __init__(self, input_size, output_size, hidden_size):
         super().__init__()
         self.main = nn.Sequential(
@@ -114,7 +110,7 @@ class GraphReadout(nn.Module):
         return self.main(h)
 
 
-class GCBN(nn.Module):
+class GCBN(nn.Module, ABC):
     def __init__(self, input_size, hidden_size, mlp_arch, gnn_async):
         super().__init__()
         self.conv = (
@@ -132,6 +128,9 @@ class GCBN(nn.Module):
 
 
 class GraphNN(nn.Module):
+    def _forward_unimplemented(self, *input: Any) -> None:
+        pass
+
     def __init__(self, input_size, hidden_size, mlp_arch, gnn_iter, gnn_async):
         super().__init__()
         self.convs = nn.ModuleList(
@@ -149,6 +148,9 @@ class GraphNN(nn.Module):
 
 
 class GraphClassifier(nn.Module):
+    def _forward_unimplemented(self, *input: Any) -> None:
+        pass
+
     def __init__(self, input_size, gnn_hidden_size, readout_hidden_size):
         super().__init__()
         self.gnn = GraphNN(input_size, gnn_hidden_size)
@@ -168,7 +170,7 @@ def sum_batch(x, idx):
     return c[idx[1:]] - c[idx[:-1]]
 
 
-class NodeReadout(nn.Module):
+class NodeReadout(nn.Module, ABC):
     def __init__(self, input_size, output_size, hidden_size):
         super().__init__()
         self.main = nn.Sequential(
@@ -179,7 +181,7 @@ class NodeReadout(nn.Module):
         return self.main(h)
 
 
-class ReinforcePolicy(nn.Module):
+class ReinforcePolicy(nn.Module, ABC):
     def __init__(
         self, input_size, gnn_hidden_size, readout_hidden_size, mlp_arch, gnn_iter, gnn_async
     ):
@@ -193,7 +195,7 @@ class ReinforcePolicy(nn.Module):
         return self.policy_readout(h[0])
 
 
-class PGPolicy(nn.Module):
+class PGPolicy(nn.Module, ABC):
     def __init__(
         self, input_size, gnn_hidden_size, readout_hidden_size, mlp_arch, gnn_iter, gnn_async
     ):
@@ -212,6 +214,9 @@ class PGPolicy(nn.Module):
 
 
 class A2CPolicy(nn.Module):
+    def _forward_unimplemented(self, *input: Any) -> None:
+        pass
+
     def __init__(self, input_size, gnn_hidden_size, readout_hidden_size):
         super().__init__()
         self.gnn = GraphNN(input_size, gnn_hidden_size)
