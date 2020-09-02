@@ -3,6 +3,7 @@ import logging
 import os
 import pdb
 import random
+import subprocess
 from collections import namedtuple, defaultdict
 from os.path import join
 
@@ -63,7 +64,7 @@ def adj_sign(n, m, occur):
 
 def adj(f):
     n, m, occur = f.n_variables, len(f.clauses), f.occur_list
-    adj_pos = adj_sign(n, m, occur[1 : n + 1])
+    adj_pos = adj_sign(n, m, occur[1: n + 1])
     adj_neg = adj_sign(n, m, occur[:n:-1])
     return (adj_pos, adj_neg)
 
@@ -96,3 +97,43 @@ def normalize(x):
 
 def unnormalize(x):
     return (x + 1) / 2
+
+
+def get_arg_parser(name):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('dir', type=str, help='output directory')
+    parser.add_argument('N', type=int, help='number of problems to be generated')
+    parser.add_argument('n', type=int, help='number of nodes')
+    parser.add_argument('p', type=float, help='probability of edge')
+    parser.add_argument('id', type=int, help='starting id')
+    parser.add_argument('k', type=int, help='size of the {}'.format(name))
+    return parser
+
+
+def create_sat_problem(filename, n, p, k, sat_name=None):
+    while True:
+        subprocess.call(['cnfgen', '-q', '-o', 'tmp.cnf', sat_name, '--gnp', str(n), str(p), str(k)])
+        try:
+            subprocess.check_call(['minisat', 'tmp.cnf'], stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as ex:
+            if ex.returncode == 10:
+                os.rename('tmp.cnf', filename)
+                return
+            os.remove('tmp.cnf')
+
+
+def process_sat(sat, name):
+    parser = get_arg_parser(name=name)
+    args = parser.parse_args()
+
+    try:
+        os.makedirs(args.dir)
+    except OSError:
+        if not os.path.isdir(args.dir):
+            raise
+
+    os.chdir(args.dir)
+
+    for i in range(args.N):
+        filename = 'id={}_n={}_p={}_k={}.cnf'.format(args.id + i, args.n, args.p, args.k)
+        create_sat_problem(filename, args.n, args.p, args.k, sat_name=sat)
