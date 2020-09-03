@@ -20,7 +20,7 @@ DataSample = namedtuple('DataSample', ['filename', 'formula', 'adj', 'sat'])
 def setup():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config_path', type=str, required=True)
-    parser.add_argument('-g', '--gpu', type=int, default=None)
+    parser.add_argument('-g', '--gpu', type=int, default=0)  # default=None
     args = parser.parse_args()
 
     with open(args.config_path) as f:

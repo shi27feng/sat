@@ -35,6 +35,7 @@ Comments: {str(self.comments)}"""
         n_variables = 0
         clauses = []
         comments = []
+        occur_list = []
         for line in string.splitlines():
             line = line.strip()
             if not line:

@@ -21,7 +21,7 @@ def create_sat_problem(filename, n, p, k):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('dir', type=str, help='output directory')
-    parser.add_argument('N', type=int, help='number of problems to be generated')
+    parser.add_argument('np', type=int, help='number of problems to be generated')
     parser.add_argument('n', type=int, help='number of nodes')
     parser.add_argument('p', type=float, help='probability of edge')
     parser.add_argument('k', type=int, help='size of the cover')
@@ -36,7 +36,7 @@ def main():
 
     os.chdir(args.dir)
 
-    for i in range(args.N):
+    for i in range(args.np):
         filename = 'id={}_n={}_p={}_k={}.cnf'.format(args.id + i, args.n, args.p, args.k)
         create_sat_problem(filename, args.n, args.p, args.k)
 

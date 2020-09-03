@@ -17,7 +17,6 @@ from search import LocalSearch
 
 logger = logging.getLogger(__name__)
 
-
 train_stats = {'iter': [], 'avg': [], 'med': [], 'acc': [], 'max': []}
 eval_stats = {'iter': [], 'avg': [], 'med': [], 'acc': [], 'max': []}
 
@@ -190,7 +189,8 @@ def eval(ls, eval_set, config):
         fp = ([], [], [], [])
         for sample in eval_set['data']:
             if config['eval_multi']:
-                flips = evaluate.generate_episodes(ls, sample, eval_set['max_tries'], eval_set['max_flips'], config['walk_prob'], False)[0]
+                flips = evaluate.generate_episodes(ls, sample, eval_set['max_tries'], eval_set['max_flips'],
+                                                   config['walk_prob'], False)[0]
             else:
                 _, flips = generate_episodes(ls, sample, eval_set['max_tries'], eval_set['max_flips'], config)
             flip_update(fp, flips, eval_set['max_flips'])
@@ -268,6 +268,7 @@ def train(ls, optimizer, scheduler, data, config):
                 logger.info('Saving best model parameters')
                 torch.save(ls.policy, join(config['dir'], 'model_best.pth'))
                 stats = new_stats
+
 
 def main():
     config, device = util.setup()
