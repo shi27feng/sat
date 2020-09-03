@@ -1,5 +1,4 @@
 import os
-import pdb
 import random
 from collections import namedtuple
 
@@ -7,7 +6,7 @@ import scipy.sparse as sparse
 import torch
 
 from cnf import CNF
-from util import DataSample, adj, adj_batch, init_edge_attr, to_sparse_tensor
+from util import DataSample, adj, init_edge_attr, to_sparse_tensor
 
 Batch = namedtuple('Batch', ['x', 'adj', 'sol'])
 

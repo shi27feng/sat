@@ -5,6 +5,7 @@ import random
 import argparse
 import PyMiniSolvers.minisolvers as minisolvers
 
+
 def write_dimacs_to(n_vars, iclauses, out_filename):
     with open(out_filename, 'w') as f:
         f.write("p cnf %d %d\n" % (n_vars, len(iclauses)))
@@ -13,13 +14,16 @@ def write_dimacs_to(n_vars, iclauses, out_filename):
                 f.write("%d " % x)
             f.write("0\n")
 
+
 def mk_out_filenames(opts, n_vars, t):
     prefix = "{}/id={}_n={}".format(opts.out_dir, t, n_vars)
     return ("", "{}.cnf".format(prefix))
 
+
 def generate_k_iclause(n, k):
     vs = np.random.choice(n, size=min(n, k), replace=False)
     return [v + 1 if random.random() < 0.5 else -(v + 1) for v in vs]
+
 
 def gen_iclause_pair(opts):
     n = random.randint(opts.min_n, opts.max_n)
@@ -42,8 +46,9 @@ def gen_iclause_pair(opts):
             break
 
     iclause_unsat = iclause
-    iclause_sat = [- iclause_unsat[0] ] + iclause_unsat[1:]
+    iclause_sat = [- iclause_unsat[0]] + iclause_unsat[1:]
     return n, iclauses, iclause_unsat, iclause_sat
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

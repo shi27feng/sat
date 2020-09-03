@@ -23,10 +23,12 @@ def setup():
     parser.add_argument('-g', '--gpu', type=int, default=0)  # default=None
     args = parser.parse_args()
 
-    with open(args.config_path) as f:
-        config_data = f.read()
+    with open(args.config_path, 'r') as f:
+        try:
+            config_data = f.read()
+        except IOError:
+            print("Can't read file: ", args.config_path)
     config = yaml.load(config_data)
-
     config['dir'] = join('results', config['name'])
     os.makedirs(config['dir'], exist_ok=True)
 
@@ -66,7 +68,7 @@ def adj(f):
     n, m, occur = f.n_variables, len(f.clauses), f.occur_list
     adj_pos = adj_sign(n, m, occur[1: n + 1])
     adj_neg = adj_sign(n, m, occur[:n:-1])
-    return (adj_pos, adj_neg)
+    return adj_pos, adj_neg
 
 
 def adj_batch(adjs, fstack):

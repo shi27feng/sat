@@ -45,7 +45,7 @@ def load_data(path, train_sets, eval_set, shuffle=False):
     if eval_set:
         logger.info('Loaded {} evaluation problems from {}'.format(len(eval_set['data']), path))
 
-    return (train_sets, eval_set)
+    return train_sets, eval_set
 
 
 def reinforce(sat, history, config):
